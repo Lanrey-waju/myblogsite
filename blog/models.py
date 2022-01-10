@@ -7,6 +7,11 @@ from django.contrib.auth import get_user_model
 CustomUser = get_user_model()
 now = timezone.now
 # Create your models here.
+class PublishedManager(models.Manager):
+    def get_queryset(self):
+        """Returns published posts when queried"""
+        return super(PublishedManager, self).get_queryset().filter(status='published')
+
 class Post(models.Model):
     STATUS_CHOICES = (
         ('draft', 'Draft'),
@@ -33,6 +38,9 @@ class Post(models.Model):
         choices=STATUS_CHOICES,
         default='draft'
     )
+
+    objects = models.Manager()
+    published = PublishedManager()
 
     class Meta:
         ordering = ('-publish',)
