@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     # Local apps
     'users.apps.UsersConfig',
+    'blog.apps.BlogConfig',
 
     # Third party apps
     'allauth',
@@ -157,5 +158,6 @@ ACCOUNT_USER_MODEL_USERNAME_FIELD = None
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_SIGNUP_PASSWORD_ENTER_TWICE = False
 
