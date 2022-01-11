@@ -152,6 +152,8 @@ AUTHENTICATION_BAACKENDS = [
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
+LOGIN_REDIRECT_URL = 'blog:home'
+
 SITE_ID = 1
 
 ACCOUNT_USER_MODEL_USERNAME_FIELD = None
