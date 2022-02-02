@@ -9,6 +9,7 @@ django-allauth = "*"
 psycopg2-binary = "*"
 python-decouple = "*"
 django-environ = "==0.8.1"
+django-debug-toolbar = "*"
 
 [dev-packages]
 
