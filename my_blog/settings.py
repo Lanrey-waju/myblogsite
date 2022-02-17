@@ -179,3 +179,9 @@ ACCOUNT_SIGNUP_PASSWORD_ENTER_TWICE = False
 import socket
 hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
 INTERNAL_IPS = [ip[:-1] + "1" for ip in ips]
+
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'mailpytesting@gmail.com'
+EMAIL_HOST_PASSWORD = 'kriqldeywxmfmtsc'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True

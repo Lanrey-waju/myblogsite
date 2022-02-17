@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    {% if sent %}
+        <p>Email Successfully Sent</p>
+    {% else %}
+        <form action="" method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Send mail</button>
+        </form
+    {% endif %}
+{% endblock content %}
