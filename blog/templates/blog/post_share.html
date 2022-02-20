@@ -3,10 +3,14 @@
 {% block content %}
     {% if sent %}
         <p>Email Successfully Sent</p>
+        <p>{{ post.title }} successfully sent to {{ form.cleaned_data.to }}</p>
     {% else %}
         <form action="" method="post">
+        <fieldset>
+            <legend><h1>Share Post</h1></legend>
             {% csrf_token %}
             {{ form.as_p }}
+        </fieldset>
             <button type="submit">Send mail</button>
         </form
     {% endif %}

@@ -1,10 +1,11 @@
 from statistics import mode
 import uuid
 from django.db import models
-from django.db.models.fields import related
 from django.utils import timezone
 from django.contrib.auth import get_user_model
 from django.urls import reverse
+from taggit.managers import TaggableManager
+from taggit.models import GenericUUIDTaggedItemBase, TaggedItemBase
 
 CustomUser = get_user_model()
 now = timezone.now
@@ -13,6 +14,15 @@ class PublishedManager(models.Manager):
     def get_queryset(self):
         """Returns published posts when queried"""
         return super(PublishedManager, self).get_queryset().filter(status='published')
+
+class UUIDTaggedItem(GenericUUIDTaggedItemBase, TaggedItemBase):
+    # If you only inherit GenericUUIDTaggedItemBase, you need to define
+    # a tag field. e.g.
+    # tag = models.ForeignKey(Tag, related_name="uuid_tagged_items", on_delete=models.CASCADE)
+
+    class Meta:
+        verbose_name = "Tag"
+        verbose_name_plural = "Tags"
 
 class Post(models.Model):
     STATUS_CHOICES = (
@@ -40,7 +50,7 @@ class Post(models.Model):
         choices=STATUS_CHOICES,
         default='draft'
     )
-
+    tags = TaggableManager(through=UUIDTaggedItem)
     objects = models.Manager()
     published = PublishedManager()
 

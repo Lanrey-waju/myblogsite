@@ -8,7 +8,10 @@
         <div class="inner">
             <article class="box post">
                 <h2>{{ post.title }}</h2>
-                <p>{{ post.body }}</p>
+                <p>{{ post.body|linebreaks }}</p>
+                <p>
+                    <a href="{% url 'blog:post_share' post_id=post.id %}">Share Post</a>
+                </p>
             </article>
         
 
