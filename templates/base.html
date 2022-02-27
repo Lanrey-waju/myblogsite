@@ -20,7 +20,7 @@
 			<!-- Nav -->
 				<nav id="nav">
 					<ul>
-						<li class="current"><a href="#">Latest Post</a></li>
+						<li class="current"><a href="{% url 'blog:home' %}">Latest Post</a></li>
 						<li><a href="#">Archives</a></li>
 						<li><a href="#">About Me</a></li>
 						<li><a href="#">Contact Me</a></li>
@@ -29,8 +29,10 @@
 
 			<!-- Search -->
 				<section class="box search">
-					<form method="post" action="#">
-						<input type="text" class="text" name="search" placeholder="Search" />
+					<form method="get" action="{% url 'blog:post_search' %}">
+						{{ search_form.as_p }}
+						<button type="submit">Search</button>
+						{% comment %} <input type="text" class="text" name="search" placeholder="Search" /> {% endcomment %}
 					</form>
 				</section>
 

@@ -12,3 +12,6 @@ class EmailPostForm(forms.Form):
     email = forms.EmailField(required=False)
     to = forms.EmailField(required=False)
     comments = forms.CharField(required=False, widget=forms.Textarea)
+
+class SearchForm(forms.Form):
+    query = forms.CharField(label='', widget=forms.TextInput(attrs={'placeholder': 'Search'}))

@@ -1,0 +1,30 @@
+{% extends 'base.html' %} 
+{% load static %}
+
+{% block content %}
+    <div id="content">
+        <div class="inner">
+            {% if query %}
+                <h2>Posts containing '{{ query }}'</h2>
+                {% with results.count as total_results  %}
+                    <h3>Found {{ total_results}} result{{total_results|pluralize}} for '{{ query }}'</h3>
+                {% endwith %}
+                {% for post in results %}
+                <article class="box post">
+                    <a href="{{ post.get_absolute_url }}">{{ post.title }}</a>
+                </article>
+                {% empty %}
+                    <h2> There are no posts containing '{{ query }}' yet.</h2>
+                    <form action="" method="get">
+                    {{ search_form.as_p }}
+                    <button type="submit">Try another query</button>
+                    </form>
+                {% endfor %}
+            {% else %}
+                <form action="" method="get"></form>
+                {{ search_form.as_p }}
+                <button type="submit">Search</button>
+            {% endif %}
+        </div>
+    </div>
+{% endblock content %}

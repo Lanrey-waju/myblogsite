@@ -47,6 +47,16 @@
                 </form>
             </section>
             {% endif %}
+            <section class="box">
+                <h2>Similar Posts</h2>
+                {% for post in similar_posts %}
+                    <p>
+                        <a href="{{ post.get_absolute_url }}">{{ post.title }}</a>
+                    </p>
+                {% empty%}
+                    <h1>There are no similar posts yet</h1>
+                {% endfor %}
+            </section>
         </div>
     </div>
 {% endblock content %}

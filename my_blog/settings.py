@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'debug_toolbar',
     'taggit',
+    'django.contrib.postgres',
 
     #the social providers
     # 'allauth.socialaccount.providers.facebook',
@@ -85,6 +86,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'blog.views.inject_form' #custom search form processor
             ],
         },
     },
