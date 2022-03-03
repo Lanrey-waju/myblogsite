@@ -1,3 +1,4 @@
+{% load blog_tags %}
 {% load static %}
 
 <!DOCTYPE html>
@@ -20,10 +21,13 @@
 			<!-- Nav -->
 				<nav id="nav">
 					<ul>
-						<li class="current"><a href="{% url 'blog:home' %}">Latest Post</a></li>
 						<li><a href="#">Archives</a></li>
 						<li><a href="#">About Me</a></li>
 						<li><a href="#">Contact Me</a></li>
+						<li class="current"><a href="{% url 'blog:home' %}">Latest Posts</a></li>
+						<div>
+							{% show_latest_posts 3 %}
+						</div>
 					</ul>
 				</nav>
 
@@ -40,25 +44,20 @@
 				<section class="box text-style1">
 					<div class="inner">
 						<p>
-							<strong>Abdulmumin's Blog:</strong> Site
-							template designed by <a href="http://twitter.com/ajlkn">AJ</a> for <a href="http://html5up.net/">HTML5 UP</a>
+							<strong>Abdulmumin's Blog: I've written a total of {% total_posts %} posts so far.</strong>
 						</p>
 					</div>
 				</section>
 
 			<!-- Recent Posts -->
-				<section class="box recent-posts">
+				{% comment %} <section class="box recent-posts">
 					<header>
 						<h2>Recent Posts</h2>
 					</header>
 					<ul>
-						<li><a href="#">Lorem ipsum dolor</a></li>
-						<li><a href="#">Feugiat nisl aliquam</a></li>
-						<li><a href="#">Sed dolore magna</a></li>
-						<li><a href="#">Malesuada commodo</a></li>
-						<li><a href="#">Ipsum metus nullam</a></li>
+						{% show_latest_posts 3 %}
 					</ul>
-				</section>
+				</section> {% endcomment %}
 
 			<!-- Recent Comments -->
 				<section class="box recent-comments">
@@ -66,9 +65,10 @@
 						<h2>Recent Comments</h2>
 					</header>
 					<ul>
-						<li>case on <a href="#">Lorem ipsum dolor</a></li>
+						{% comment %} <li>case on <a href="#">Lorem ipsum dolor</a></li>
 						<li>molly on <a href="#">Sed dolore magna</a></li>
-						<li>case on <a href="#">Sed dolore magna</a></li>
+						<li>case on <a href="#">Sed dolore magna</a></li> {% endcomment %}
+						{% show_latest_comments %}
 					</ul>
 				</section>
 	{% comment %} 

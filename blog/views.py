@@ -1,14 +1,13 @@
-import imp
-from re import search
 from django.shortcuts import render, get_object_or_404
 from .models import Post
 from django.views.generic import ListView
-from .forms import CommentsForm, EmailPostForm, SearchForm
+from .forms import CommentsForm, EmailPostForm, SearchForm, PostForm
 from django.core.mail import send_mail
 from taggit.models import Tag
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Count
 from django.contrib.postgres.search import TrigramSimilarity, SearchVector, SearchQuery, SearchRank
+from datetime import datetime
 
 # Create your views here.
 # class PostListView(ListView):
@@ -22,6 +21,7 @@ def inject_form(request):
 def post_list(request, tag_slug=None):
     object_list = Post.published.all()
     tag = None
+    date = datetime.now()
     if tag_slug:
         tag = get_object_or_404(Tag, slug=tag_slug)
         object_list = object_list.filter(tags__in=[tag])
@@ -34,7 +34,7 @@ def post_list(request, tag_slug=None):
         posts = paginator.page(1)
     except EmptyPage:
         posts = paginator.page(paginator.num_pages)    
-    return render(request, 'blog/post_list.html', {'posts': posts, 'page': page, 'tag': tag})
+    return render(request, 'blog/post_list.html', {'posts': posts, 'page': page, 'tag': tag, 'date': date})
 
 def post_detail(request, year, month, day, post):
     post = get_object_or_404(
@@ -97,3 +97,6 @@ def post_search(request):
             search_query = SearchQuery(query)
             results = Post.published.annotate(similarity=TrigramSimilarity('title', query),).filter(similarity__gt=0.1).order_by('-similarity')
     return render(request, 'blog/search_results.html', {'search_form': search_form, 'query': query, 'results': results})
+
+def add_post(request):
+    pass
