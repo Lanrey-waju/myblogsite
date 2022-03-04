@@ -7,13 +7,14 @@ CustomUser = get_user_model()
 # Register your models here.
 @admin.register(CustomUser)
 class CustomUserAdmin(UserAdmin):
-    add_form = CustomUserCreationForm
     form = CustomUserChangeForm
-    list_display = ('email', 'is_staff', 'is_active',)
-    list_filter = ('email', 'is_staff', 'is_active',)
+    add_form = CustomUserCreationForm
+    list_display = ('email', 'is_staff', 'is_active', 'first_name', 'last_name',)
+    list_filter = ('email', 'is_staff', 'is_active', 'first_name', 'last_name',)
     fieldsets = (
         (None, {'fields': ('email', 'password')}),
         ('Permissions', {'fields': ('is_staff', 'is_active')}),
+        (('Personal info'), {'fields': ('first_name', 'last_name')}),
     )
     add_fieldsets = (
         (None, {

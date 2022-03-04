@@ -5,6 +5,11 @@
 
 {% block content %}
     <div id="content">
+        <article class="box post post-excerpt">
+            <header>
+                <div class="info" style="margin-top: 0.8rem";>Published {{ post.publish|date:"M d, Y" }} by {{ post.author.get_full_name }}</div>
+            </header>
+        </article>
         <div class="inner">
             <article class="box post">
                 <h2>{{ post.title }}</h2>
@@ -46,6 +51,7 @@
 
                 </form>
             </section>
+            
             {% endif %}
             <section class="box">
                 <h2>Similar Posts</h2>
