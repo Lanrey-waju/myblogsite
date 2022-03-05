@@ -164,10 +164,13 @@ AUTH_USER_MODEL = "users.CustomUser"
 
 AUTHENTICATION_BAACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
+    # django allauth config
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
 LOGIN_REDIRECT_URL = 'blog:home'
+ACCOUNT_LOGOUT_REDIRECT = 'blog:home'
+
 
 SITE_ID = 1
 

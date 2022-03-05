@@ -11,7 +11,12 @@
 		<!-- Content -->
 			<div id="content">
 				<div class="inner">
-
+					{% if user.is_authenticated %}
+						<h3><a href="{% url 'account_logout' %}">Log Out</a></h3>
+					{% else %}
+						<h3><a href="{% url 'account_login' %}">Log In</a></h3>
+						<h3><a href="{% url 'account_signup' %}">Join</a> the community!</h3>
+					{% endif %}
 					<!-- Post -->
 						<article class="box post post-excerpt">
 							<header>
@@ -20,6 +25,9 @@
 									if they get too long. You can also remove the <p> entirely if you don't
 									need a subtitle.
 								-->
+								{% if user.is_authenticated %}
+									<h2>Hi, {{ user.get_short_name }}</h2>
+								{% endif %}
 								<h2><a href="#">Welcome to My Blog</a></h2>
 								<p>Read Contents on Tech, Health and Philosophy</p>
 							</header>
