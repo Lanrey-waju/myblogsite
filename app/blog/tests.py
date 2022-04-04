@@ -34,3 +34,9 @@ class BlogPostTests(TestCase):
         self.assertTemplateUsed(self.response, 'blog/post_list.html')
         self.assertTemplateNotUsed(self.response, 'blog/post_detail.html')
 
+
+class BlogViewTests(TestCase):
+    """ Test module for the views logic of the blog"""
+
+    def setUp(self):
+        pass
