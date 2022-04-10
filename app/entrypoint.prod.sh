@@ -1,14 +1,17 @@
 #!/bin/sh
 
-if [ "$DAABASE" = "postgres" ]
+if [ "$DATABASE" = "postgres" ]
 then
-    echo "Waiting for postgres..."
 
-    while ! nc -z $SQL_HOST $SQLP_PORT; do
-        slwwp 0.1
+    while ! nc -z blog-db 5432; do
+        echo "Waiting for postgres..."
+        sleep 0.1
     done
 
     echo "Postgres started"
 fi
+
+python manage.py migrate --no-input
+python manage.py collectstatic
 
 exec "$@"

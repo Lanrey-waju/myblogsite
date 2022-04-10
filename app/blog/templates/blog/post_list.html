@@ -11,12 +11,12 @@
 		<!-- Content -->
 			<div id="content">
 				<div class="inner">
-					{% if user.is_authenticated %}
-						<h3><a href="{% url 'account_logout' %}">Log Out</a></h3>
+					{% comment %} {% if user.is_authenticated %}
+						<h3><a href="{% url 'logout' %}">Log Out</a></h3>
 					{% else %}
-						<h3><a href="{% url 'account_login' %}">Log In</a></h3>
-						<h3><a href="{% url 'account_signup' %}">Join</a> the community!</h3>
-					{% endif %}
+						<h3><a href="{% url 'login' %}">Log In</a></h3>
+						<h3><a href="{% url 'signup' %}">Join</a> the community!</h3>
+					{% endif %} {% endcomment %}
 					<!-- Post -->
 						<article class="box post post-excerpt">
 							<header>

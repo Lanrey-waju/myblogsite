@@ -23,7 +23,7 @@ urlpatterns = [
     path('', include('blog.urls', namespace='blog')),
 
     # User management
-    path('accounts/', include('allauth.urls')),
+    # path('accounts/', include('allauth.urls')),
     
 ]
 
