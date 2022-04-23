@@ -4,7 +4,7 @@ services:
   web:
     image: "${WEB_IMAGE}"
     command: gunicorn my_blog.wsgi:application --bind 0.0.0.0:8000
-    entrypoint: ["/home/app/web/entrypoint.prod.sh"]
+    # entrypoint: ["/home/app/web/entrypoint.prod.sh"]
     volumes:
       - static_volume:/home/app/web/staticfiles
     ports:
@@ -26,6 +26,7 @@ services:
     image: "${NGINX_IMAGE}"
     volumes:
       - static_volume:/home/app/web/staticfiles
+      - media_volume:/home/app/web/staticfiles
     ports:
       - 80:80
     depends_on:
@@ -34,3 +35,4 @@ services:
 
 volumes:
   static_volume:
+  media_volume:
