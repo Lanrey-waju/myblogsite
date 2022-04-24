@@ -10,8 +10,8 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
-from operator import ge
 import os
+import dj_database_url
 from pathlib import Path
 from decouple import config
 
@@ -106,6 +106,9 @@ DATABASES = {
     }
 }
 
+DATABASE_URL = os.environ.get('DATABASE_URL')
+db_from_env = dj_database_url.config(default=DATABASE_URL, conn_max_age=500, ssl_require=True)
+DATABASES['default'].update(db_from_env)
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
@@ -189,3 +192,6 @@ EMAIL_HOST_USER = 'mailpytesting@gmail.com'
 EMAIL_HOST_PASSWORD = 'kriqldeywxmfmtsc'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
+
+#whitenoise
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
