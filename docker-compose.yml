@@ -3,24 +3,23 @@ version: '3.9'
 services:
   db:
     image: postgres:14-alpine
-    container_name: db-dev
     volumes:
       - postgres_data:/var/lib/postgresql/data
-    # environment:
-    #   - SQL_USER=my_blog
-    #   - SQL_PASSWORD=postgres
-    #   - SQL_DB=my_blog_dev
+    environment:
+      - SQL_USER=my_blog
+      - SQL_PASSWORD=postgres
+      - SQL_DB=my_blog_dev
     env_file:
       - .env.dev
 
   web:
     build: ./app
     command: python /usr/src/app/manage.py runserver 0.0.0.0:8000
+    entrypoint: /usr/src/app/entrypoint.sh
     volumes:
       - ./app/:/usr/src/app/
     env_file:
       - ./.env.dev
-    entrypoint: ["/usr/src/app/entrypoint.sh"]
     ports:
       - 8000:8000
     depends_on:

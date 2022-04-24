@@ -1,6 +1,8 @@
 name: Continuous Integration and Delivery
 
-on: [push]
+on:
+  push:
+    branches: [main]
 
 env:
   WEB_IMAGE: ghcr.io/$(echo $GITHUB_REPOSITORY | tr '[:upper:]' '[:lower:]')/web

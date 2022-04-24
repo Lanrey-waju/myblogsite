@@ -11,6 +11,8 @@ python-decouple = "*"
 django-environ = "==0.8.1"
 django-debug-toolbar = "*"
 django-taggit = "*"
+coverage = "*"
+whitenoise = "*"
 
 [dev-packages]
 
