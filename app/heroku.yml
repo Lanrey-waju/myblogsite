@@ -3,10 +3,10 @@ setup:
   - plan: heroku-postgresql
 build:
   docker:
-    web: app/Dockerfile
+    web: Dockerfile
 release:
   image: web
   command:
-  - python app/manage.py collectstatic --noinput
+  - python manage.py collectstatic --noinput
 run:
   web: gunicorn app/my_blog.wsgi:application --bind 0.0.0.0:8000
