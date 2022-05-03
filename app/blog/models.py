@@ -1,11 +1,14 @@
-from statistics import mode
 import uuid
+
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth import get_user_model
 from django.urls import reverse
+
 from taggit.managers import TaggableManager
 from taggit.models import GenericUUIDTaggedItemBase, TaggedItemBase
+from ckeditor.fields import RichTextField
+
 
 CustomUser = get_user_model()
 now = timezone.now
@@ -41,7 +44,7 @@ class Post(models.Model):
         on_delete=models.CASCADE,
         related_name='blog_posts'
     )
-    body = models.TextField()
+    body = RichTextField()
     publish = models.DateTimeField(default=now)
     created = models.DateTimeField(auto_now_add=True)
     created = models.DateTimeField(auto_now=True)
@@ -67,7 +70,7 @@ class Post(models.Model):
 class Comments(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments')
     name = models.CharField(max_length=80)
-    body = models.TextField()
+    body = RichTextField()
     email = models.EmailField(max_length=254)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)

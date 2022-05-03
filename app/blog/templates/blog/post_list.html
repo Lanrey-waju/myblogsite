@@ -74,7 +74,7 @@
 									{% if not forloop.last %}, {% endif %}
 									{% endfor %}
 								</p>
-								<p>{{ post.body | truncatewords:30 | linebreaks }}</p>
+								<p>{{ post.body | safe | truncatewords:30 | linebreaks }}</p>
 								{% endfor %}
 							</header>
 							{% comment %} <div class="info">

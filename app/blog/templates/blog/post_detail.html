@@ -13,7 +13,7 @@
         <div class="inner">
             <article class="box post">
                 <h2>{{ post.title }}</h2>
-                <p>{{ post.body|linebreaks }}</p>
+                <p>{{ post.body|safe|linebreaks }}</p>
                 <p>
                     <a href="{% url 'blog:post_share' post_id=post.id %}">Share Post</a>
                 </p>
@@ -34,7 +34,7 @@
                         Comment {{ forloop.counter }} by {{ comment.name }}
                         {{ comment.created}}
                     </p>
-                    {{ comment.body | linebreaks}}
+                    {{ comment.body | safe | linebreaks}}
                 </div>
             {% empty %}
                 <p>There are no comments yet</p>

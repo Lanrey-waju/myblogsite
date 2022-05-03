@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'debug_toolbar',
     'taggit',
     'django.contrib.postgres',
+    'ckeditor',
 
     #the social providers
     # 'allauth.socialaccount.providers.facebook',
