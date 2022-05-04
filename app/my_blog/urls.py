@@ -23,7 +23,8 @@ urlpatterns = [
     path('', include('blog.urls', namespace='blog')),
 
     # User management
-    # path('accounts/', include('allauth.urls')),
+    path('accounts/', include('django.contrib.auth.urls')),
+    path('accounts/', include('users.urls', namespace='users')),
     
 ]
 

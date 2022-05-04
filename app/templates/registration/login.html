@@ -5,11 +5,12 @@
 
 {% block content %}
     <div id="content">
-        <h1>Log In</h1>
+        <h1 class="display-5">Log In</h1>
         <form action="" method="post">
             {% csrf_token %}
             {{ form.as_p }}
             <button type="submit">Log In</button>
+            <p class="mt-4">Forgot your Password? Reset it <a href="{% url 'password_reset'%}">here</a></p>
         </form>
     </div>
 {% endblock content %}
