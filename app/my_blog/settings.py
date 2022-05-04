@@ -12,7 +12,10 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 
 import os
 import dj_database_url
+
 from pathlib import Path
+
+from decouple import config
 
 
 
@@ -67,7 +70,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware', #debug_toolbar
 ]
 
 ROOT_URLCONF = 'my_blog.urls'
@@ -165,7 +168,7 @@ AUTH_USER_MODEL = "users.CustomUser"
 AUTHENTICATION_BAACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
     # django allauth config
-    'allauth.account.auth_backends.AuthenticationBackend',
+    # 'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
 LOGIN_REDIRECT_URL = 'blog:home'
@@ -184,12 +187,18 @@ ACCOUNT_SIGNUP_PASSWORD_ENTER_TWICE = False
 # django-debug-toolbar
 import socket
 hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
-INTERNAL_IPS = [ip[:-1] + "1" for ip in ips]
+print(ips)
+INTERNAL_IPS = [ip[:-1] + "1" for ip in ips] + ['127.0.0.1',]
 
+#Email Settings
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'mailpytesting@gmail.com'
-EMAIL_HOST_PASSWORD = 'kriqldeywxmfmtsc'
+if DEBUG == 1:
+    EMAIL_HOST_USER = config('EMAIL_HOST_USER')
+    EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
+else:
+    EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+    EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
