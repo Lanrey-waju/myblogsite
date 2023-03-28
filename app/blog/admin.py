@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.admin.decorators import register
-from .models import Post, Comments
+from .models import Post, Comment
 
 # Register your models here.
 @admin.register(Post)
@@ -13,7 +13,7 @@ class PostAdmin(admin.ModelAdmin):
     ordering = ('status', 'publish')
     search_fields = ('title', 'body')
 
-@admin.register(Comments)
+@admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):
     list_display = ('name', 'email', 'post', 'created', 'active',)
     list_filter = ('active', 'created', 'updated',)

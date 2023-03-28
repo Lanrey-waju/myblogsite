@@ -100,8 +100,8 @@ WSGI_APPLICATION = 'my_blog.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': os.environ.get('SQL_ENGINE', 'django.db.backends.sqlite3'),
-        'NAME': os.environ.get('SQL_DATABASE', BASE_DIR/'db.sqlite3'),
+        'ENGINE': os.environ.get('SQL_ENGINE', 'django.db.backends.postgresql'),
+        'NAME': os.environ.get('SQL_DATABASE', BASE_DIR/'db.postgresql'),
         'USER': os.environ.get('SQL_USER', 'user'),
         'PASSWORD': os.environ.get('SQL_PASSWORD', 'password'),
         'HOST': os.environ.get('SQL_HOST', 'db'),
@@ -188,7 +188,8 @@ ACCOUNT_SIGNUP_PASSWORD_ENTER_TWICE = False
 import socket
 hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
 print(ips)
-INTERNAL_IPS = [ip[:-1] + "1" for ip in ips] + ['127.0.0.1',]
+INTERNAL_IPS = ['127.0.0.1',] + [ip[:-1] + "1" for ip in ips] 
+print(INTERNAL_IPS)
 
 #Email Settings
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'

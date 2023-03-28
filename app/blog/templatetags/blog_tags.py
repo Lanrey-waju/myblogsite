@@ -1,5 +1,5 @@
 from django import template
-from ..models import Post, Comments
+from ..models import Post, Comment
 
 register = template.Library()
 
@@ -14,5 +14,5 @@ def show_latest_posts(count=5):
 
 @register.inclusion_tag('blog/latest_comments.html')
 def show_latest_comments(count=5):
-    latest_comments = Comments.objects.all().order_by('-created')
+    latest_comments = Comment.objects.all().order_by('-created')
     return {'latest_comments': latest_comments}

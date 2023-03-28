@@ -1,10 +1,10 @@
 from django import forms
-from .models import Comments, Post
+from .models import Comment, Post
 
 class CommentsForm(forms.ModelForm):
     
     class Meta:
-        model = Comments
+        model = Comment
         fields = ("name", "email", "body",)
 
 class EmailPostForm(forms.Form):
