@@ -47,7 +47,7 @@ class Post(models.Model):
     body = RichTextField()
     publish = models.DateTimeField(default=now)
     created = models.DateTimeField(auto_now_add=True)
-    created = models.DateTimeField(auto_now=True)
+    updated = models.DateTimeField(auto_now=True)
     status = models.CharField(
         max_length=10,
         choices=STATUS_CHOICES,
