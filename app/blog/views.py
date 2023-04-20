@@ -4,7 +4,7 @@ from django.shortcuts import render, get_object_or_404
 from django.views.generic import ListView
 from django.core.mail import send_mail
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.db.models import Count, F
+from django.db.models import Count, F, Q
 from django.contrib.postgres.search import TrigramSimilarity, SearchVector, SearchQuery, SearchRank
 
 from taggit.models import Tag, TaggedItem
@@ -50,10 +50,18 @@ def post_list(request, tag_slug=None):
 
 
 def post_detail(request, year, month, day, post):
+    # post = get_object_or_404(
+    #     Post,
+    #     slug=post,
+    #     status='published',
+    #     publish__year=year,
+    #     publish__month=month,
+    #     publish__day=day
+    # )
     post = get_object_or_404(
-        Post,
+        Post.published.select_related('author'),
         slug=post,
-        status=Post.status.PUBLISHED,
+        status='published',
         publish__year=year,
         publish__month=month,
         publish__day=day
@@ -77,36 +85,30 @@ def post_detail(request, year, month, day, post):
     similar_posts = similar_posts.annotate(same_tags=Count(F('tags'))) \
         .order_by('-same_tags', '-publish')[:4]
 
-    # post_tags = UUIDTaggedItem.objects.filter(
-    #     object_id=post.id, content_type__model='post')
-    # similar_posts = Post.published.filter(
-    #     F(tags__in=post_tags.values('tag_id'))).exclude(id=post.id)
-    # similar_posts = similar_posts.annotate(same_tags=Count(
-    #     'tags')).order_by('-same_tags', '-publish')[:4]
     return render(request, 'blog/post_detail.html', {'post': post, 'comments': comments, 'new_comment': new_comment, 'comment_form': comment_form, 'similar_posts': similar_posts})
 
 
-def post_share(request, post_id):
-    post = get_object_or_404(Post, id=post_id, status='published')
-    sent = False
+# def post_share(request, post_id):
+#     post = get_object_or_404(Post, id=post_id, status='published')
+#     sent = False
 
-    if request.method == 'POST':
-        form = EmailPostForm(request.POST)
+#     if request.method == 'POST':
+#         form = EmailPostForm(request.POST)
 
-        if form.is_valid():
-            cd = form.cleaned_data
-            post_url = request.build_absolute_uri(post.get_absolute_url())
-            subject = f"{cd['name']} recommends you read {post.title}"
-            message = f"Read {post.title} at {post_url}\n\n {cd['name']}\'s comments: {cd['comments']}"
-            send_mail(subject, message, 'mailpytesting@gmail.com', [cd['to'],])
-            sent = True
-    else:
-        form = EmailPostForm()
-    return render(request, 'blog/post_share.html', {
-        'post': post,
-        'form': form,
-        'sent': sent
-    })
+#         if form.is_valid():
+#             cd = form.cleaned_data
+#             post_url = request.build_absolute_uri(post.get_absolute_url())
+#             subject = f"{cd['name']} recommends you read {post.title}"
+#             message = f"Read {post.title} at {post_url}\n\n {cd['name']}\'s comments: {cd['comments']}"
+#             send_mail(subject, message, 'mailpytesting@gmail.com', [cd['to'],])
+#             sent = True
+#     else:
+#         form = EmailPostForm()
+#     return render(request, 'blog/post_share.html', {
+#         'post': post,
+#         'form': form,
+#         'sent': sent
+#     })
 
 
 def post_search(request):
@@ -119,9 +121,16 @@ def post_search(request):
             query = search_form.cleaned_data['query']
             search_vector = SearchVector('title', 'body')
             search_query = SearchQuery(query)
-            results = Post.published.annotate(similarity=TrigramSimilarity(
-                'title', query),).filter(similarity__gt=0.1).order_by('-similarity')
-    return render(request, 'blog/search_results.html', {'search_form': search_form, 'query': query, 'results': results})
+            results = Post.published.annotate(
+                similarity_title=TrigramSimilarity(
+                    'title', query), similarity_body=TrigramSimilarity('body', query)) \
+                .filter(Q(similarity_title__gt=0.1) | Q(similarity_body__gt=0.1)) \
+                .order_by('-similarity_title')
+    return render(request,
+                  'blog/search_results.html',
+                  {'search_form': search_form,
+                   'query': query,
+                   'results': results})
 
 
 def add_post(request):

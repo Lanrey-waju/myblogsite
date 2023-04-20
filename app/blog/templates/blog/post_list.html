@@ -11,13 +11,6 @@
 		<!-- Content -->
 			<div id="content">
 				<div class="inner">
-					{% comment %} {% if user.is_authenticated %}
-						<h3><a href="{% url 'logout' %}">Log Out</a></h3>
-					{% else %}
-						<h3><a href="{% url 'login' %}">Log In</a></h3>
-						<h3><a href="{% url 'signup' %}">Join</a> the community!</h3>
-					{% endif %} {% endcomment %}
-					<!-- Post -->
 						<article class="box post post-excerpt">
 							<header>
 								<!--
@@ -26,10 +19,10 @@
 									need a subtitle.
 								-->
 								{% if user.is_authenticated %}
-									<h2>Hi, {{ user.get_short_name }}</h2>
+									<h2>Welcome, {{ user.get_short_name }}</h2>
 								{% endif %}
-								<h2><a href="#">Welcome to My Blog</a></h2>
-								<p>Read Contents on Tech, Health and Philosophy</p>
+								
+								<p>Read Content on Tech, Health and Lifestyle</p>
 							</header>
 							<div class="info">
 								<!--
