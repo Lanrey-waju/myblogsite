@@ -1,34 +1,31 @@
 # pull official base image
-FROM python:3.11.2-slim-bullseye
+FROM python:3.11.3-alpine3.17
 
-# set work directory
-WORKDIR /app
+LABEL maintainer="Abdulmumin"
 
 # set environment variables
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
-ENV DEBUG 0
-ENV PORT 8000
 
-# install psycopg2
-RUN apk update \
-    && apk add --virtual build-essential gcc python3-dev musl-dev \
-    && apk add postgresql-dev \
-    && pip install psycopg2
+# copy required files
+COPY ./requirements.txt /requirements.txt
+COPY ./app /app
 
-# install dependencies
-COPY ./requirements.txt .
-RUN pip install -r requirements.txt
+# set work directory
+WORKDIR /app
+
+# expose port
+EXPOSE 8000
+
+# Create virtual environment, install dependencies and add user
+RUN python -m venv /py && \
+    /py/bin/pip install --upgrade pip && \
+    /py/bin/pip install -r /requirements.txt && \
+    adduser --disabled-password --no-create-home lanrey
+
+ENV PATH="/py/bin/:$PATH"
+
+USER lanrey
 
 # copy project
 COPY . .
-
-# collect static files
-RUN python manage.py collectstatic --noinput
-
-# add and run as non-root user
-RUN adduser -D lanrey
-USER lanrey
-
-# run gunicorn
-CMD gunicorn my_blog.wsgi:application --bind 0.0.0.0:$PORT

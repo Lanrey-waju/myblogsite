@@ -10,13 +10,13 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
+import socket
 import os
 import dj_database_url
 
 from pathlib import Path
 
 from decouple import config
-
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -32,7 +32,13 @@ SECRET_KEY = os.environ.get('SECRET_KEY', default='foo')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = int(os.environ.get('DEBUG', default=0))
 
-ALLOWED_HOSTS = ['devtales.herokuapp.com', 'localhost', '127.0.0.1',]
+ALLOWED_HOSTS = []
+ALLOWED_HOSTS.extend(
+    filter(
+        None,
+        os.environ.get('ALLOWED_HOSTS', '').split(',')
+    )
+)
 
 # Application definition
 
@@ -42,7 +48,7 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'whitenoise.runserver_nostatic', #whitenoise
+    'whitenoise.runserver_nostatic',  # whitenoise
     'django.contrib.staticfiles',
     'django.contrib.sites',
     # Local apps
@@ -55,7 +61,7 @@ INSTALLED_APPS = [
     'django.contrib.postgres',
     'ckeditor',
 
-    #the social providers
+    # the social providers
     # 'allauth.socialaccount.providers.facebook',
     # 'allauth.socialaccount.providers.google',
     # 'allauth.socialaccount.providers.twitter',
@@ -63,14 +69,14 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware', #Whitenoise
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # Whitenoise
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'debug_toolbar.middleware.DebugToolbarMiddleware', #debug_toolbar
+    'debug_toolbar.middleware.DebugToolbarMiddleware',  # debug_toolbar
 ]
 
 ROOT_URLCONF = 'my_blog.urls'
@@ -86,7 +92,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'blog.views.inject_form' #custom search form processor
+                'blog.views.inject_form'  # custom search form processor
             ],
         },
     },
@@ -110,7 +116,8 @@ DATABASES = {
 }
 
 DATABASE_URL = os.environ.get('DATABASE_URL')
-db_from_env = dj_database_url.config(default=DATABASE_URL, conn_max_age=500, ssl_require=True)
+db_from_env = dj_database_url.config(
+    default=DATABASE_URL, conn_max_age=500, ssl_require=True)
 DATABASES['default'].update(db_from_env)
 
 # Password validation
@@ -185,13 +192,12 @@ ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_SIGNUP_PASSWORD_ENTER_TWICE = False
 
 # django-debug-toolbar
-import socket
 hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
 print(ips)
-INTERNAL_IPS = ['127.0.0.1',] + [ip[:-1] + "1" for ip in ips] 
+INTERNAL_IPS = ['127.0.0.1',] + [ip[:-1] + "1" for ip in ips]
 print(INTERNAL_IPS)
 
-#Email Settings
+# Email Settings
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 if DEBUG == 1:
@@ -203,7 +209,7 @@ else:
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
-#whitenoise
+# whitenoise
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 if os.environ.get('ENVIRONMENT') == 'production':
@@ -216,4 +222,4 @@ if os.environ.get('ENVIRONMENT') == 'production':
     SECURE_CONTENT_TYPE_NOSNIFF = True
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
-    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https') # new
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')  # new
