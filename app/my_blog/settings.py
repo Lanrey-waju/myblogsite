@@ -30,7 +30,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('SECRET_KEY', default='foo')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = int(os.environ.get('DEBUG', default=0))
+DEBUG = bool(int(os.environ.get('DEBUG')))
+print(DEBUG)
 
 ALLOWED_HOSTS = []
 ALLOWED_HOSTS.extend(
@@ -39,6 +40,7 @@ ALLOWED_HOSTS.extend(
         os.environ.get('ALLOWED_HOSTS', '').split(',')
     )
 )
+print(ALLOWED_HOSTS)
 
 # Application definition
 
@@ -107,11 +109,11 @@ WSGI_APPLICATION = 'my_blog.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': os.environ.get('SQL_ENGINE', 'django.db.backends.postgresql'),
-        'NAME': os.environ.get('SQL_DATABASE', BASE_DIR/'db.postgresql'),
-        'USER': os.environ.get('SQL_USER', 'user'),
-        'PASSWORD': os.environ.get('SQL_PASSWORD', 'password'),
-        'HOST': os.environ.get('SQL_HOST', 'db'),
-        'PORT': os.environ.get('SQL_PORT', '5432'),
+        'NAME': os.environ.get('SQL_DATABASE'),
+        'USER': os.environ.get('SQL_USER'),
+        'PASSWORD': os.environ.get('SQL_PASSWORD'),
+        'HOST': os.environ.get('SQL_HOST'),
+        'PORT': os.environ.get('SQL_PORT'),
     }
 }
 
@@ -195,19 +197,20 @@ ACCOUNT_SIGNUP_PASSWORD_ENTER_TWICE = False
 hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
 print(ips)
 INTERNAL_IPS = ['127.0.0.1',] + [ip[:-1] + "1" for ip in ips]
-print(INTERNAL_IPS)
 
 # Email Settings
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-if DEBUG == 1:
-    EMAIL_HOST_USER = config('EMAIL_HOST_USER')
-    EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
-else:
-    EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
-    EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_HOST = 'smtp.gmail.com'
+# if DEBUG == 1:
+#     EMAIL_HOST_USER = config('EMAIL_HOST_USER')
+#     EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
+# else:
+#     EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+#     EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+# EMAIL_PORT = 587
+# EMAIL_USE_TLS = True
 
 # whitenoise
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
