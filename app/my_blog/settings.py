@@ -30,7 +30,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('SECRET_KEY', default='foo')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = bool(int(os.environ.get('DEBUG')))
+DEBUG = bool(int(os.environ.get('DEBUG', 0)))
 print(DEBUG)
 
 ALLOWED_HOSTS = []
@@ -50,7 +50,7 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'whitenoise.runserver_nostatic',  # whitenoise
+    # 'whitenoise.runserver_nostatic',  # whitenoise
     'django.contrib.staticfiles',
     'django.contrib.sites',
     # Local apps
@@ -58,7 +58,6 @@ INSTALLED_APPS = [
     'blog.apps.BlogConfig',
 
     # Third party apps
-    'debug_toolbar',
     'taggit',
     'django.contrib.postgres',
     'ckeditor',
@@ -68,10 +67,12 @@ INSTALLED_APPS = [
     # 'allauth.socialaccount.providers.google',
     # 'allauth.socialaccount.providers.twitter',
 ]
+if DEBUG == True:
+    INSTALLED_APPS.extend(['debug_toolbar'])
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',  # Whitenoise
+    # 'whitenoise.middleware.WhiteNoiseMiddleware',  # Whitenoise
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -108,12 +109,11 @@ WSGI_APPLICATION = 'my_blog.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': os.environ.get('SQL_ENGINE', 'django.db.backends.postgresql'),
-        'NAME': os.environ.get('SQL_DATABASE'),
-        'USER': os.environ.get('SQL_USER'),
-        'PASSWORD': os.environ.get('SQL_PASSWORD'),
-        'HOST': os.environ.get('SQL_HOST'),
-        'PORT': os.environ.get('SQL_PORT'),
+        'ENGINE': 'django.db.backends.postgresql',
+        'HOST': os.environ.get('DB_HOST'),
+        'NAME': os.environ.get('DB_NAME'),
+        'USER': os.environ.get('DB_USER'),
+        'PASSWORD': os.environ.get('DB_PASS'),
     }
 }
 
@@ -160,7 +160,7 @@ STATIC_URL = '/static/static/'
 MEDIA_URL = '/static/media/'
 
 MEDIA_ROOT = '/vol/web/media'
-STATIC_ROOT = 'vol/web/static'
+STATIC_ROOT = '/vol/web/static'
 # STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'),]
@@ -217,7 +217,7 @@ EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 # EMAIL_USE_TLS = True
 
 # whitenoise
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+# STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 if os.environ.get('ENVIRONMENT') == 'production':
     SECURE_BROWSER_XSS_FILTER = True

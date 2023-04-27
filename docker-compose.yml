@@ -4,6 +4,8 @@ services:
   web:
     build:
       context: .
+      args:
+        - DEV=true
     command: >
       sh -c "python manage.py wait_for_db &&
              python manage.py migrate &&
@@ -13,12 +15,19 @@ services:
     volumes:
       - ./app/:/app
       - ./data/web:/vol/web
-    env_file:
-      - .env.dev
+    environment:
+      - DB_HOST=db
+      - DB_NAME=myblogsite
+      - DB_USER=dbuser
+      - DB_PASS=testpass123
+      - SECRET_KEY=devsupersecretkey
+      - DEBUG=1
     depends_on:
       - db
 
   db:
     image: postgres:14-alpine3.17
-    env_file:
-      - .env.dev
+    environment:
+      - POSTGRES_DB=myblogsite
+      - POSTGRES_USER=dbuser
+      - POSTGRES_PASSWORD=testpass123
