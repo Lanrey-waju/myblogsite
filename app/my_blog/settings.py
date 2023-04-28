@@ -33,14 +33,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY', default='foo')
 DEBUG = bool(int(os.environ.get('DEBUG', 0)))
 print(DEBUG)
 
-ALLOWED_HOSTS = []
-ALLOWED_HOSTS.extend(
-    filter(
-        None,
-        os.environ.get('ALLOWED_HOSTS', '').split(',')
-    )
-)
-print(ALLOWED_HOSTS)
+ALLOWED_HOSTS = [] if DEBUG else os.environ.get("ALLOWED_HOSTS").split(',')
 
 # Application definition
 
