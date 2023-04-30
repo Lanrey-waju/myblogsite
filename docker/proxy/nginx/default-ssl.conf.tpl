@@ -3,7 +3,7 @@ server {
     server_name ${DOMAIN} www.${DOMAIN};
 
     location /.well-known/acme-challenge/ {
-        root /vol/www
+        root /vol/www;
     }
 
     location / {
@@ -23,7 +23,7 @@ server {
 
     ssl_dhparam /vol/proxy/ssl-dhparams.pem;
 
-    addheader Strict-Transport-Security "max-age=31536000; includeSubDomains" always
+    addheader Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
 
     location /static {
         alias /vol/static;
