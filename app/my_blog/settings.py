@@ -74,8 +74,8 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
 ]
-if DEBUG:
-    MIDDLEWARE.extend(['debug_toolbar.middleware.DebugToolbarMiddleware',])
+if DEBUG == True:
+    MIDDLEWARE.extend(['debug_toolbar.middleware.DebugToolbarMiddleware'])
 
 ROOT_URLCONF = 'my_blog.urls'
 
@@ -193,7 +193,7 @@ ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_SIGNUP_PASSWORD_ENTER_TWICE = False
 
 # django-debug-toolbar
-if DEBUG:
+if DEBUG == True:
     hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
     print(ips)
     INTERNAL_IPS = ['127.0.0.1'] + [ip[:-1] + "1" for ip in ips]
