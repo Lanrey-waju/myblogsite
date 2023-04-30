@@ -72,8 +72,10 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'debug_toolbar.middleware.DebugToolbarMiddleware',  # debug_toolbar
+
 ]
+if DEBUG:
+    MIDDLEWARE.extend(['debug_toolbar.middleware.DebugToolbarMiddleware',])
 
 ROOT_URLCONF = 'my_blog.urls'
 
@@ -191,9 +193,10 @@ ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_SIGNUP_PASSWORD_ENTER_TWICE = False
 
 # django-debug-toolbar
-hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
-print(ips)
-INTERNAL_IPS = ['127.0.0.1',] + [ip[:-1] + "1" for ip in ips]
+if DEBUG:
+    hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
+    print(ips)
+    INTERNAL_IPS = ['127.0.0.1'] + [ip[:-1] + "1" for ip in ips]
 
 # Email Settings
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
@@ -211,15 +214,3 @@ EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
 # whitenoise
 # STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-
-if os.environ.get('ENVIRONMENT') == 'production':
-    SECURE_BROWSER_XSS_FILTER = True
-    X_FRAME_OPTIONS = 'DENY'
-    SECURE_SSL_REDIRECT = True
-    SECURE_HSTS_SECONDS = 3600
-    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-    SECURE_HSTS_PRELOAD = True
-    SECURE_CONTENT_TYPE_NOSNIFF = True
-    SESSION_COOKIE_SECURE = True
-    CSRF_COOKIE_SECURE = True
-    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')  # new
