@@ -37,7 +37,7 @@ services:
     volumes:
       - static-data:/vol/static
       - certbot-web:/vol/www
-      - proxy_dhparams:/vol/proxy
+      - proxy-dhparams:/vol/proxy
       - certbot-certs:/etc/letsencrypt
     environment:
       - DOMAIN=${DOMAIN}
@@ -60,4 +60,4 @@ volumes:
   static-data:
   certbot-web:
   proxy-dhparams:
-  certboy-certs:
+  certbot-certs:
