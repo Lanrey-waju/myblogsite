@@ -72,7 +72,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-
 ]
 if DEBUG == True:
     MIDDLEWARE.extend(['debug_toolbar.middleware.DebugToolbarMiddleware'])
