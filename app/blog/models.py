@@ -7,7 +7,7 @@ from django.urls import reverse
 
 from taggit.managers import TaggableManager
 from taggit.models import GenericUUIDTaggedItemBase, TaggedItemBase
-from ckeditor.fields import RichTextField
+from ckeditor_uploader.fields import RichTextUploadingField
 
 
 CustomUser = get_user_model()
@@ -48,7 +48,7 @@ class Post(models.Model):
         on_delete=models.CASCADE,
         related_name='blog_posts'
     )
-    body = RichTextField()
+    body = RichTextUploadingField()
     publish = models.DateTimeField(default=now)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
@@ -75,7 +75,7 @@ class Comment(models.Model):
     post = models.ForeignKey(
         Post, on_delete=models.CASCADE, related_name='comments')
     name = models.CharField(max_length=80)
-    body = RichTextField()
+    body = RichTextUploadingField()
     email = models.EmailField(max_length=254)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)

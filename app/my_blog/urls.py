@@ -23,6 +23,7 @@ from django.conf import settings
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('blog.urls', namespace='blog')),
+    path('ckeditor/', include('ckeditor_uploader.urls')),
 
     # User management
     path('accounts/', include('django.contrib.auth.urls')),

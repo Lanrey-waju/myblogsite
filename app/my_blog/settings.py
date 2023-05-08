@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     'taggit',
     'django.contrib.postgres',
     'ckeditor',
+    'ckeditor_uploader',
 
     # the social providers
     # 'allauth.socialaccount.providers.facebook',
@@ -157,9 +158,6 @@ MEDIA_ROOT = '/vol/web/media'
 STATIC_ROOT = '/vol/web/static'
 # STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'),]
-
-
 # STATICFILES_FINDERS = [
 #     "django.contrib.staticfiles.finders.FileSystemFinder",
 #     "django.contrib.staticfiles.finders.AppDirectoriesFinder",
@@ -200,6 +198,7 @@ if DEBUG == True:
 # Email Settings
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
+
 # EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 # EMAIL_HOST = 'smtp.gmail.com'
 # if DEBUG == 1:
@@ -211,5 +210,94 @@ EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 # EMAIL_PORT = 587
 # EMAIL_USE_TLS = True
 
-# whitenoise
-# STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+# CKEDITOR_BASEPATH = "/ckeditor/ckeditor/"
+CKEDITOR_UPLOAD_PATH = "/vol/web/media"
+
+CKEDITOR_CONFIGS = {
+    'default': {
+        'skin': 'moono-lisa',
+        # 'skin': 'office2013',
+        'toolbar_Basic': [
+            ['Source', '-', 'Bold', 'Italic',]
+        ],
+        'toolbar_YourCustomToolbarConfig': [
+            {'name': 'document', 'items': [
+                'Source', '-', 'Save', 'NewPage', 'Preview', 'Print', '-', 'Templates']},
+            {'name': 'clipboard', 'items': [
+                'Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo']},
+            {'name': 'editing', 'items': [
+                'Find', 'Replace', '-', 'SelectAll']},
+            {'name': 'forms',
+             'items': ['Form', 'Checkbox', 'Radio', 'TextField', 'Textarea', 'Select', 'Button', 'ImageButton',
+                       'HiddenField']},
+            '/',
+            {'name': 'basicstyles',
+             'items': ['Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript', '-', 'RemoveFormat']},
+            {'name': 'paragraph',
+             'items': ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote', 'CreateDiv', '-',
+                       'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock', '-', 'BidiLtr', 'BidiRtl',
+                       'Language']},
+            {'name': 'links', 'items': ['Link', 'Unlink', 'Anchor']},
+            {'name': 'insert',
+             'items': ['Image', 'CodeSnippet', 'Flash', 'Table', 'HorizontalRule', 'Smiley', 'SpecialChar', 'PageBreak', 'Iframe']},
+            '/',
+            {'name': 'styles', 'items': [
+                'Styles', 'Format', 'Font', 'FontSize']},
+            {'name': 'colors', 'items': ['TextColor', 'BGColor']},
+            {'name': 'tools', 'items': ['Maximize', 'ShowBlocks']},
+            {'name': 'about', 'items': ['About']},
+            '/',  # put this to force next toolbar on new line
+            {'name': 'yourcustomtools', 'items': [
+                # put the name of your editor.ui.addButton here
+                'Preview',
+                'Maximize',
+
+            ]},
+        ],
+        'toolbar': 'YourCustomToolbarConfig',  # put selected toolbar config here
+        # 'toolbarGroups': [{ 'name': 'document', 'groups': [ 'mode', 'document', 'doctools' ] }],
+        # 'height': 291,
+        # 'width': '100%',
+        # 'filebrowserWindowHeight': 725,
+        # 'filebrowserWindowWidth': 940,
+        # 'toolbarCanCollapse': True,
+        # 'mathJaxLib': '//cdn.mathjax.org/mathjax/2.2-latest/MathJax.js?config=TeX-AMS_HTML',
+        'tabSpaces': 4,
+        'extraPlugins': ','.join(
+            [
+                'uploadimage',  # the upload image feature
+                # your extra plugins here
+                'codesnippet',
+                # 'div',
+                # 'autolink',
+                # 'autoembed',
+                # 'embedsemantic',
+                # 'autogrow',
+                # # 'devtools',
+                # 'widget',
+                # 'lineutils',
+                'clipboard',
+                'dialog',
+                'dialogui',
+                # 'elementspath',
+            ]
+        ),
+        "codesnippet_theme": 'monokai',
+    }
+}
+
+# CKEDITOR_CONFIGS = {
+#     "default": {
+#         "toolbar": 'Special',
+#         "toolbar_Special": [
+#             ['Bold', 'CodeSnippet'],
+#         ],
+#         "width": "100%",
+#         "extraPlugins": ",".join(
+#             [
+#                 "codesnippet",
+#                 'clipboard',
+#             ]
+#         ),
+#     },
+# }

@@ -31,3 +31,8 @@ services:
       - POSTGRES_DB=myblogsite
       - POSTGRES_USER=dbuser
       - POSTGRES_PASSWORD=testpass123
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+volumes:
+  postgres-data:
