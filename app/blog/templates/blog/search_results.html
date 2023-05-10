@@ -7,7 +7,7 @@
             {% if query %}
                 <h2>Posts containing '{{ query }}'</h2>
                 {% with results.count as total_results  %}
-                    <h3>Found {{ total_results}} result{{total_results|pluralize}} for '{{ query }}'</h3>
+                    <h3>Found {{ total_results }} result{{total_results|pluralize}} for '{{ query }}'</h3>
                 {% endwith %}
                 {% for post in results %}
                 <article class="box post">

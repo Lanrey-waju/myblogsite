@@ -6,7 +6,7 @@
 	html5up.net | @ajlkn
 	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
 -->
-{% block title %}Lanre's Blog{% endblock title %}
+{% block title %}Abdulmumin's Blog{% endblock title %}
 		{% block content %}
 		<!-- Content -->
 			<div id="content">
@@ -37,14 +37,14 @@
 								<!--
 									Note: You can change the number of list items in "stats" to whatever you want.
 								-->
-								<ul class="stats">
+								{% comment %} <ul class="stats">
 									<li><a href="#" class="icon fa-comment">16</a></li>
 									<li><a href="#" class="icon fa-heart">32</a></li>
 									<li><a href="#" class="icon brands fa-twitter">64</a></li>
 									<li><a href="#" class="icon brands fa-facebook-f">128</a></li>
-								</ul>
+								</ul> {% endcomment %}
 							</div>
-							<a href="#" class="image featured"><img src="static/static/images/pic01.jpg" alt="" /></a>
+							<a href="#" class="image featured"><img src="{% static 'images/pic01.jpg' %}" alt="" /></a>
 							<p>
 								<strong>Hello!</strong> You're looking at <strong>Abdulmumin's blog</strong>
 							</p>
