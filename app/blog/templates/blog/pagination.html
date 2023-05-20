@@ -5,7 +5,13 @@
     {% if page.has_previous %}
         <a href="?page={{ page.previous_page_number }}">Prev</a>
     {% endif %}
-    <a class="active" href="#">{{ page.number }}</a>
+    {% for i in page.paginator.page_range  %}
+        {% if page.number == i %}
+        <a class="active" href="#">{{ page.number }}</a>
+        {% else %}
+        <a href="?page={{ i }}">{{ i }}</a>
+        {% endif %}
+    {% endfor %}
 </div>
 {% if page.has_next %}
     <a class="button next" href="?page={{ page.next_page_number }}">Next</a>

@@ -35,7 +35,7 @@ def post_list(request, tag_slug=None):
         object_list = object_list.filter(id__in=object_list)
         # object_list = object_list.filter(tags__in=[tag])
 
-    paginator = Paginator(object_list, 3)
+    paginator = Paginator(object_list, 10)
     page = request.GET.get('page')
     try:
         posts = paginator.page(page)
