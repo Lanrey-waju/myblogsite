@@ -22,7 +22,6 @@ from decouple import config
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
@@ -31,7 +30,6 @@ SECRET_KEY = os.environ.get('SECRET_KEY', default='foo')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = bool(int(os.environ.get('DEBUG', 0)))
-print(DEBUG)
 
 ALLOWED_HOSTS = [] if DEBUG else os.environ.get("ALLOWED_HOSTS").split(',')
 
@@ -194,14 +192,16 @@ ACCOUNT_SIGNUP_PASSWORD_ENTER_TWICE = False
 # django-debug-toolbar
 if DEBUG == True:
     hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
-    print(ips)
     INTERNAL_IPS = ['127.0.0.1'] + [ip[:-1] + "1" for ip in ips]
 
 # Email Settings
-EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+# EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
-
-# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'mailhog'
+EMAIL_PORT = 1025  # The SMTP port exposed by Mailhog container
+# EMAIL_USE_TLS = False
+# EMAIL_USE_SSL = False
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 # EMAIL_HOST = 'smtp.gmail.com'
 # if DEBUG == 1:
 #     EMAIL_HOST_USER = config('EMAIL_HOST_USER')
@@ -303,5 +303,3 @@ CKEDITOR_CONFIGS = {
 #         ),
 #     },
 # }
-
-print(BASE_DIR)

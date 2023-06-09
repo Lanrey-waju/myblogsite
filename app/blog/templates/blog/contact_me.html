@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block title %}Contact Me{% endblock title %}
+
+{% block content %}
+    <div id="content">
+        <h2>Send me a message</h2>
+        <form action="" method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Send</button>
+        </form>
+    </div>
+{% endblock content %}

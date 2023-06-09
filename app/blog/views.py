@@ -1,16 +1,15 @@
 from datetime import datetime
 
-from django.shortcuts import render, get_object_or_404
-from django.views.generic import ListView
-from django.core.mail import send_mail
+from django.shortcuts import render, get_object_or_404, redirect
+from django.core.mail import send_mail, BadHeaderError
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Count, F, Q
 from django.contrib.postgres.search import TrigramSimilarity, SearchVector, SearchQuery, SearchRank
+from django.http import HttpResponse
+from django.contrib import messages
 
-from taggit.models import Tag, TaggedItem
-
-from .forms import CommentsForm, EmailPostForm, SearchForm, PostForm
-from .models import Post, UUIDTaggedItem
+from .forms import CommentsForm, ContactMeForm, SearchForm
+from .models import Post
 # Create your views here.
 # class PostListView(ListView):
 #     queryset = Post.published.all()
@@ -30,10 +29,7 @@ def post_list(request, tag_slug=None):
     date = datetime.now()
     if tag_slug:
         tag = get_object_or_404(Tag, slug=tag_slug)
-        object_list = TaggedItem.objects.filter(tag=tag, content_type__model='post') \
-            .values_list('object_id', flat=True)
-        object_list = object_list.filter(id__in=object_list)
-        # object_list = object_list.filter(tags__in=[tag])
+        object_list = object_list.filter(tags__in=[tag])
 
     paginator = Paginator(object_list, 10)
     page = request.GET.get('page')
@@ -47,6 +43,34 @@ def post_list(request, tag_slug=None):
                                                    'page': page,
                                                    'tag': tag,
                                                    'date': date})
+
+
+def about(request):
+    return render(request, 'blog/about.html')
+
+
+def contact_me(request):
+    contact_form = ContactMeForm()
+    if request.method == 'POST':
+        contact_form = ContactMeForm(data=request.POST)
+        if contact_form.is_valid():
+            subject = "Blog Inquiry"
+            body = {
+                'name': contact_form.cleaned_data['name'],
+                'email': contact_form.cleaned_data['email'],
+                'message': contact_form.cleaned_data['message'],
+            }
+            message = '\n'.join(body.values())
+
+            try:
+                send_mail(subject, message, body['email'], [
+                          'abdulmumin@aamodev.com'])
+                messages.success(request, "Email sent successfully")
+            except BadHeaderError:
+                return HttpResponse("Invalid Header Found")
+            return redirect('blog:home')
+
+    return render(request, 'blog/contact_me.html', {'form': contact_form})
 
 
 def post_detail(request, year, month, day, post):

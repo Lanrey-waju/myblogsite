@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import post_detail, post_list, post_search
+from .views import post_detail, post_list, post_search, about, contact_me
 
 app_name = 'blog'
 
@@ -10,5 +10,7 @@ urlpatterns = [
          post_detail, name='post_detail'),
     # path('<post_id>/share/', post_share, name='post_share'),
     path('search/', post_search, name='post_search'),
+    path('about/', about, name='about'),
+    path('contact/', contact_me, name='contact_me'),
 
 ]

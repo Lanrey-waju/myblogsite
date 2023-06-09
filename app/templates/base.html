@@ -33,8 +33,8 @@
 				<nav id="nav">
 					<ul>
 						{% comment %} <li><a href="#">Archives</a></li> {% endcomment %}
-						<li><a href="#">About Me</a></li>
-						<li><a href="#">Contact Me</a></li>
+						<li><a href="{% url 'blog:about' %}">About Me</a></li>
+						<li><a href="{% url 'blog:contact_me' %}">Contact Me</a></li>
 						<li class="current"><a href="{% url 'blog:home' %}">Latest Posts</a></li>
 						<div class="text-center">
 							{% show_latest_posts 3 %}
