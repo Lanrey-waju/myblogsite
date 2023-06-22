@@ -1,15 +1,22 @@
+import requests
 from datetime import datetime
 
 from django.shortcuts import render, get_object_or_404, redirect
 from django.core.mail import send_mail, BadHeaderError
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Count, F, Q
-from django.contrib.postgres.search import TrigramSimilarity, SearchVector, SearchQuery, SearchRank
+from django.contrib.postgres.search import (
+    TrigramSimilarity,
+    SearchVector,
+    SearchQuery,
+    SearchRank,
+)
 from django.http import HttpResponse
 from django.contrib import messages
 
 from .forms import CommentsForm, ContactMeForm, SearchForm
 from .models import Post
+
 # Create your views here.
 # class PostListView(ListView):
 #     queryset = Post.published.all()
@@ -19,7 +26,7 @@ from .models import Post
 
 
 def inject_form(request):
-    return ({'search_form': SearchForm()})
+    return {"search_form": SearchForm()}
 
 
 def post_list(request, tag_slug=None):
@@ -32,45 +39,47 @@ def post_list(request, tag_slug=None):
         object_list = object_list.filter(tags__in=[tag])
 
     paginator = Paginator(object_list, 10)
-    page = request.GET.get('page')
+    page = request.GET.get("page")
     try:
         posts = paginator.page(page)
     except PageNotAnInteger:
         posts = paginator.page(1)
     except EmptyPage:
         posts = paginator.page(paginator.num_pages)
-    return render(request, 'blog/post_list.html', {'posts': posts,
-                                                   'page': page,
-                                                   'tag': tag,
-                                                   'date': date})
+    return render(
+        request,
+        "blog/post_list.html",
+        {"posts": posts, "page": page, "tag": tag, "date": date},
+    )
 
 
 def about(request):
-    return render(request, 'blog/about.html')
+    return render(request, "blog/about.html")
 
 
 def contact_me(request):
     contact_form = ContactMeForm()
-    if request.method == 'POST':
+    if request.method == "POST":
         contact_form = ContactMeForm(data=request.POST)
         if contact_form.is_valid():
             subject = "Blog Inquiry"
             body = {
-                'name': contact_form.cleaned_data['name'],
-                'email': contact_form.cleaned_data['email'],
-                'message': contact_form.cleaned_data['message'],
+                "name": contact_form.cleaned_data["name"],
+                "email": contact_form.cleaned_data["email"],
+                "message": contact_form.cleaned_data["message"],
             }
-            message = '\n'.join(body.values())
+            message = "\n".join(body.values())
 
             try:
-                send_mail(subject, message, body['email'], [
-                          'abdulmumin@aamodev.com'])
+                send_mail(
+                    subject, message, body["email"], ["abdulmumin@contact.aamodev.com"]
+                )
                 messages.success(request, "Email sent successfully")
             except BadHeaderError:
                 return HttpResponse("Invalid Header Found")
-            return redirect('blog:home')
+            return redirect("blog:home")
 
-    return render(request, 'blog/contact_me.html', {'form': contact_form})
+    return render(request, "blog/contact_me.html", {"form": contact_form})
 
 
 def post_detail(request, year, month, day, post):
@@ -83,19 +92,19 @@ def post_detail(request, year, month, day, post):
     #     publish__day=day
     # )
     post = get_object_or_404(
-        Post.published.select_related('author'),
+        Post.published.select_related("author"),
         slug=post,
-        status='published',
+        status="published",
         publish__year=year,
         publish__month=month,
-        publish__day=day
+        publish__day=day,
     )
 
     comments = post.comments.filter(active=True)
 
     new_comment = None
 
-    if request.method == 'POST':
+    if request.method == "POST":
         comment_form = CommentsForm(data=request.POST)
         if comment_form.is_valid():
             new_comment = comment_form.save(commit=False)
@@ -103,40 +112,50 @@ def post_detail(request, year, month, day, post):
             new_comment.save()
     else:
         comment_form = CommentsForm()
-    post_tags_ids = post.tags.values_list('id', flat=True)
-    similar_posts = Post.published.filter(tags__in=post_tags_ids) \
-        .exclude(id=post.id)
-    similar_posts = similar_posts.annotate(same_tags=Count(F('tags'))) \
-        .order_by('-same_tags', '-publish')[:4]
+    post_tags_ids = post.tags.values_list("id", flat=True)
+    similar_posts = Post.published.filter(tags__in=post_tags_ids).exclude(id=post.id)
+    similar_posts = similar_posts.annotate(same_tags=Count(F("tags"))).order_by(
+        "-same_tags", "-publish"
+    )[:4]
 
-    return render(request,
-                  'blog/post_detail.html',
-                  {'post': post,
-                   'comments': comments,
-                   'new_comment': new_comment,
-                   'comment_form': comment_form,
-                   'similar_posts': similar_posts})
+    return render(
+        request,
+        "blog/post_detail.html",
+        {
+            "post": post,
+            "comments": comments,
+            "new_comment": new_comment,
+            "comment_form": comment_form,
+            "similar_posts": similar_posts,
+        },
+    )
 
 
 def post_search(request):
     search_form = SearchForm()
     query = None
     results = []
-    if 'query' in request.GET:
+    if "query" in request.GET:
         search_form = SearchForm(request.GET)
         if search_form.is_valid():
-            query = search_form.cleaned_data['query']
-            search_vector = (
-                SearchVector('title', weight='A') +
-                SearchVector('body', weight='B')
+            query = search_form.cleaned_data["query"]
+            search_vector = SearchVector("title", weight="A") + SearchVector(
+                "body", weight="B"
             )
             search_query = SearchQuery(query)
-            results = Post.published.annotate(
-                rank=SearchRank(search_vector, search_query),
-                similarity_title=TrigramSimilarity(
-                    'title', query), similarity_body=TrigramSimilarity('body', query)) \
-                .filter(Q(rank__gte=0.3) | Q(similarity_title__gt=0.1) | Q(similarity_body__gt=0.3)) \
-                .order_by('-rank')
+            results = (
+                Post.published.annotate(
+                    rank=SearchRank(search_vector, search_query),
+                    similarity_title=TrigramSimilarity("title", query),
+                    similarity_body=TrigramSimilarity("body", query),
+                )
+                .filter(
+                    Q(rank__gte=0.3)
+                    | Q(similarity_title__gt=0.1)
+                    | Q(similarity_body__gt=0.3)
+                )
+                .order_by("-rank")
+            )
             # if results:
             #     results = results
             # else:
@@ -145,8 +164,8 @@ def post_search(request):
             #             'title', search_query), similarity_body=TrigramSimilarity('body', search_query)) \
             #         .filter(Q(similarity_title__gt=0.1) | Q(similarity_body__gt=0.7)) \
             #         .order_by('-similarity_title')
-    return render(request,
-                  'blog/search_results.html',
-                  {'search_form': search_form,
-                   'query': query,
-                   'results': results})
+    return render(
+        request,
+        "blog/search_results.html",
+        {"search_form": search_form, "query": query, "results": results},
+    )
