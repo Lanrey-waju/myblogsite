@@ -15,13 +15,8 @@ services:
     volumes:
       - ./app/:/app
       - ./data/web:/vol/web
-    environment:
-      - DB_HOST=db
-      - DB_NAME=myblogsite
-      - DB_USER=dbuser
-      - DB_PASS=testpass123
-      - SECRET_KEY=devsupersecretkey
-      - DEBUG=1
+    env_file:
+      - .env
     networks:
       - my-network
 

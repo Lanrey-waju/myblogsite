@@ -70,7 +70,14 @@ def contact_me(request):
             message = "\n".join(body.values())
 
             try:
-                send_mail(subject, message, body["email"], ["abdulmumin@aamodev.com"])
+                send_mail(
+                    subject,
+                    message,
+                    body["email"],
+                    [
+                        "abdulmumin@aamodev.com",
+                    ],
+                )
                 messages.success(request, "Email sent successfully")
             except BadHeaderError:
                 return HttpResponse("Invalid Header Found")
