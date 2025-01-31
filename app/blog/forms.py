@@ -1,4 +1,5 @@
 from django import forms
+
 from .models import Comment, Post
 
 
@@ -6,7 +7,11 @@ class CommentsForm(forms.ModelForm):
 
     class Meta:
         model = Comment
-        fields = ("name", "email", "body",)
+        fields = (
+            "name",
+            "email",
+            "body",
+        )
 
 
 class ContactMeForm(forms.Form):
@@ -16,12 +21,16 @@ class ContactMeForm(forms.Form):
 
 
 class SearchForm(forms.Form):
-    query = forms.CharField(label='', widget=forms.TextInput(
-        attrs={'placeholder': 'Search'}))
+    query = forms.CharField(
+        label="", widget=forms.TextInput(attrs={"placeholder": "Search"})
+    )
 
 
 class PostForm(forms.ModelForm):
 
     class Meta:
         model = Post
-        fields = ("title", "body",)
+        fields = (
+            "title",
+            "body",
+        )

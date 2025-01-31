@@ -1,14 +1,12 @@
 import uuid
 
-from django.db import models
-from django.utils import timezone
+from ckeditor_uploader.fields import RichTextUploadingField
 from django.contrib.auth import get_user_model
+from django.db import models
 from django.urls import reverse
-
+from django.utils import timezone
 from taggit.managers import TaggableManager
 from taggit.models import GenericUUIDTaggedItemBase, TaggedItemBase
-from ckeditor_uploader.fields import RichTextUploadingField
-
 
 CustomUser = get_user_model()
 now = timezone.now
@@ -18,7 +16,7 @@ now = timezone.now
 class PublishedManager(models.Manager):
     def get_queryset(self):
         """Returns published posts when queried"""
-        return super(PublishedManager, self).get_queryset().filter(status='published')
+        return super(PublishedManager, self).get_queryset().filter(status="published")
 
 
 class UUIDTaggedItem(GenericUUIDTaggedItemBase, TaggedItemBase):
@@ -33,47 +31,39 @@ class UUIDTaggedItem(GenericUUIDTaggedItemBase, TaggedItemBase):
 
 class Post(models.Model):
     STATUS_CHOICES = (
-        ('draft', 'Draft'),
-        ('published', 'Published'),
+        ("draft", "Draft"),
+        ("published", "Published"),
     )
-    id = models.UUIDField(
-        primary_key=True,
-        default=uuid.uuid4,
-        editable=False
-    )
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     title = models.CharField(max_length=250)
-    slug = models.SlugField(max_length=250, unique_for_date='publish')
+    slug = models.SlugField(max_length=250, unique_for_date="publish")
     author = models.ForeignKey(
-        CustomUser,
-        on_delete=models.CASCADE,
-        related_name='blog_posts'
+        CustomUser, on_delete=models.CASCADE, related_name="blog_posts"
     )
     body = RichTextUploadingField()
     publish = models.DateTimeField(default=now)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
-    status = models.CharField(
-        max_length=10,
-        choices=STATUS_CHOICES,
-        default='draft'
-    )
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default="draft")
     tags = TaggableManager(through=UUIDTaggedItem)
     objects = models.Manager()
     published = PublishedManager()
 
     class Meta:
-        ordering = ('-publish',)
+        ordering = ("-publish",)
 
     def __str__(self):
         return self.title
 
     def get_absolute_url(self):
-        return reverse("blog:post_detail", args=[self.publish.year, self.publish.month, self.publish.day, self.slug])
+        return reverse(
+            "blog:post_detail",
+            args=[self.publish.year, self.publish.month, self.publish.day, self.slug],
+        )
 
 
 class Comment(models.Model):
-    post = models.ForeignKey(
-        Post, on_delete=models.CASCADE, related_name='comments')
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="comments")
     name = models.CharField(max_length=80)
     body = RichTextUploadingField()
     email = models.EmailField(max_length=254)
@@ -82,7 +72,7 @@ class Comment(models.Model):
     active = models.BooleanField(default=True)
 
     class Meta:
-        ordering = ('created',)
+        ordering = ("created",)
 
     def __str__(self):
-        return f'Comment by {self.name} on {self.post}'
+        return f"Comment by {self.name} on {self.post}"
