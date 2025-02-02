@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     "django.contrib.postgres",
     "ckeditor",
     "ckeditor_uploader",
+    "rest_framework",
     # the social providers
     # 'allauth.socialaccount.providers.facebook',
     # 'allauth.socialaccount.providers.google',
@@ -377,3 +378,10 @@ TAGGIT_CASE_INSENSITIVE = True
 #         ),
 #     },
 # }
+
+# REST_FRAMEWORK
+REST_FRAMEWORK = {
+    "DEFAULT_PERMISSION_CLASSES": [
+        "rest_framework.permission.DjangoModelPermissionsOrAnonReadOnly"
+    ]
+}
