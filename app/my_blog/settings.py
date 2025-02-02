@@ -45,7 +45,7 @@ INSTALLED_APPS = [
     "users.apps.UsersConfig",
     "blog.apps.BlogConfig",
     # Third party apps
-    "taggit",
+    # "taggit",
     "django.contrib.postgres",
     "ckeditor",
     "ckeditor_uploader",
@@ -55,7 +55,7 @@ INSTALLED_APPS = [
     # 'allauth.socialaccount.providers.twitter',
 ]
 if DEBUG == True:
-    INSTALLED_APPS.extend(["debug_toolbar"])
+    INSTALLED_APPS.extend(["debug_toolbar", "django_extensions"])
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -358,6 +358,9 @@ CKEDITOR_CONFIGS = {
         "codesnippet_theme": "monokai",
     }
 }
+
+# Taggit
+TAGGIT_CASE_INSENSITIVE = True
 
 # CKEDITOR_CONFIGS = {
 #     "default": {
