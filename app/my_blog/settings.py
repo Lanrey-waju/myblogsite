@@ -45,7 +45,7 @@ INSTALLED_APPS = [
     "users.apps.UsersConfig",
     "blog.apps.BlogConfig",
     # Third party apps
-    # "taggit",
+    "taggit",
     "django.contrib.postgres",
     "ckeditor",
     "ckeditor_uploader",

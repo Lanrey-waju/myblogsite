@@ -1,17 +1,18 @@
 from datetime import datetime
 
-from django.shortcuts import render, get_object_or_404, redirect
-from django.core.mail import send_mail, BadHeaderError
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.db.models import Count, F, Q
+from django.contrib import messages
 from django.contrib.postgres.search import (
-    TrigramSimilarity,
-    SearchVector,
     SearchQuery,
     SearchRank,
+    SearchVector,
+    TrigramSimilarity,
 )
+from django.core.mail import BadHeaderError, send_mail
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
+from django.db.models import Count, F, Q
 from django.http import HttpResponse
-from django.contrib import messages
+from django.shortcuts import get_object_or_404, redirect, render
+from taggit.models import Tag
 
 from .forms import CommentsForm, ContactMeForm, SearchForm
 from .models import Post

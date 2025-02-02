@@ -13,6 +13,15 @@ now = timezone.now
 # Create your models here.
 
 
+class TimeStampedModel(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        abstract = True
+
+
 class PublishedManager(models.Manager):
     def get_queryset(self):
         """Returns published posts when queried"""
@@ -22,19 +31,20 @@ class PublishedManager(models.Manager):
 class UUIDTaggedItem(GenericUUIDTaggedItemBase, TaggedItemBase):
     # If you only inherit GenericUUIDTaggedItemBase, you need to define
     # a tag field. e.g.
-    # tag = models.ForeignKey(Tag, related_name="uuid_tagged_items", on_delete=models.CASCADE)
+    # tag = models.ForeignKey(
+    #     Tag, related_name="uuid_tagged_items", on_delete=models.CASCADE
+    # )
 
     class Meta:
         verbose_name = "Tag"
         verbose_name_plural = "Tags"
 
 
-class Post(models.Model):
+class Post(TimeStampedModel):
     STATUS_CHOICES = (
         ("draft", "Draft"),
         ("published", "Published"),
     )
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     title = models.CharField(max_length=250)
     slug = models.SlugField(max_length=250, unique_for_date="publish")
     author = models.ForeignKey(
@@ -42,8 +52,6 @@ class Post(models.Model):
     )
     body = RichTextUploadingField()
     publish = models.DateTimeField(default=now)
-    created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now=True)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default="draft")
     tags = TaggableManager(through=UUIDTaggedItem)
     objects = models.Manager()
