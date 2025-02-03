@@ -380,8 +380,8 @@ TAGGIT_CASE_INSENSITIVE = True
 # }
 
 # REST_FRAMEWORK
-REST_FRAMEWORK = {
-    "DEFAULT_PERMISSION_CLASSES": [
-        "rest_framework.permission.DjangoModelPermissionsOrAnonReadOnly"
-    ]
-}
+# REST_FRAMEWORK = {
+#     "DEFAULT_PERMISSION_CLASSES": [
+#         "rest_framework.permission.DjangoModelPermissionsOrAnonReadOnly"
+#     ]
+# }
