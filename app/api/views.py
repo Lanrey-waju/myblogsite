@@ -1,12 +1,12 @@
 from blog.models import Post
-from rest_framework import generics, permissions
+from rest_framework import permissions, viewsets
 from users.models import CustomUser
 
 from .serializers import PostSerializer, UserSerializer
 
 
 # Create your views here.
-class PostList(generics.ListCreateAPIView):
+class PostViewSet(viewsets.ModelViewSet):
     queryset = Post.published.all()
     serializer_class = PostSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
@@ -15,11 +15,6 @@ class PostList(generics.ListCreateAPIView):
         serializer.save(author=self.request.user)
 
 
-class PostDetail(generics.RetrieveAPIView):
-    queryset = Post.published.all()
-    serializer_class = PostSerializer
-
-
-class UserList(generics.ListCreateAPIView):
+class UserViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = CustomUser.objects.all()
     serializer_class = UserSerializer

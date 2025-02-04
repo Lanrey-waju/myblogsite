@@ -1,10 +1,9 @@
 from api import views
-from django.urls import path
+from django.urls import include, path
+from rest_framework.routers import DefaultRouter
 
-urlpatterns = [
-    # posts endpoints
-    path("posts/", views.PostList.as_view()),
-    path("posts/<uuid:pk>/", views.PostDetail.as_view()),
-    # users endpoints
-    path("users/", views.UserList.as_view()),
-]
+router = DefaultRouter()
+router.register(r"posts", views.PostViewSet, basename="post")
+router.register(r"users", views.UserViewSet, basename="user")
+
+urlpatterns = [path("", include(router.urls))]
