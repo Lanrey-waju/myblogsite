@@ -15,8 +15,8 @@ now = timezone.now
 
 class TimeStampedModel(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         abstract = True
@@ -49,6 +49,7 @@ class Post(TimeStampedModel):
     title = models.CharField(max_length=250)
     slug = models.SlugField(
         max_length=250,
+        unique_for_date="publish",
         blank=True,
     )
     author = models.ForeignKey(
