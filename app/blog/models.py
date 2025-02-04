@@ -1,6 +1,5 @@
-import uuid
-
 from ckeditor_uploader.fields import RichTextUploadingField
+from core.models import TimeStampedModel
 from django.contrib.auth import get_user_model
 from django.db import models
 from django.urls import reverse
@@ -11,15 +10,6 @@ from taggit.models import GenericUUIDTaggedItemBase, TaggedItemBase
 CustomUser = get_user_model()
 now = timezone.now
 # Create your models here.
-
-
-class TimeStampedModel(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-    class Meta:
-        abstract = True
 
 
 class PublishedManager(models.Manager):
@@ -75,17 +65,15 @@ class Post(TimeStampedModel):
         )
 
 
-class Comment(models.Model):
+class Comment(TimeStampedModel):
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="comments")
     name = models.CharField(max_length=80)
     body = RichTextUploadingField()
     email = models.EmailField(max_length=254)
-    created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now=True)
     active = models.BooleanField(default=True)
 
     class Meta:
-        ordering = ("created",)
+        ordering = ("created_at",)
 
     def __str__(self):
         return f"Comment by {self.name} on {self.post}"

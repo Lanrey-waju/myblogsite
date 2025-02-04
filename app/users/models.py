@@ -1,3 +1,4 @@
+from core.models import TimeStampedModel
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.db import models
 from django.utils import timezone
@@ -7,7 +8,7 @@ from .managers import CustomUserManager
 # Create your models here.
 
 
-class CustomUser(AbstractBaseUser, PermissionsMixin):
+class CustomUser(AbstractBaseUser, PermissionsMixin, TimeStampedModel):
     email = models.EmailField("email address", max_length=254, unique=True)
     first_name = models.CharField(verbose_name="first name", max_length=150)
     last_name = models.CharField(verbose_name="last name", max_length=150)

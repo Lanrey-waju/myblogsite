@@ -40,7 +40,7 @@ class PostSerializer(TaggitSerializer, HyperlinkedModelSerializer):
             "body",
             "author",
             "status",
-            "created",
+            "created_at",
             "tags",
             "publish",
         ]
@@ -59,4 +59,4 @@ class UserSerializer(ModelSerializer):
 
     class Meta:
         model = CustomUser
-        fields = ["email", "first_name", "last_name", "blog_posts", "date_joined"]
+        fields = ["id", "email", "first_name", "last_name", "blog_posts", "date_joined"]

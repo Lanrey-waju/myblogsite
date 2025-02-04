@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     # Local apps
     "users.apps.UsersConfig",
     "blog.apps.BlogConfig",
+    "core.apps.CoreConfig",
     # Third party apps
     "taggit",
     "django.contrib.postgres",

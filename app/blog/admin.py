@@ -15,7 +15,7 @@ class PostAdmin(admin.ModelAdmin):
     )
     list_filter = (
         "status",
-        "created",
+        "created_at",
         "publish",
         "author",
     )
@@ -32,17 +32,16 @@ class CommentAdmin(admin.ModelAdmin):
         "name",
         "email",
         "post",
-        "created",
+        "created_at",
         "active",
     )
     list_filter = (
         "active",
-        "created",
-        "updated",
+        "created_at",
+        "updated_at",
     )
     search_fields = (
         "name",
         "email",
         "body",
     )
-
