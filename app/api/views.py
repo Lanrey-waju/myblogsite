@@ -1,5 +1,5 @@
 from blog.models import Post
-from rest_framework import generics
+from rest_framework import generics, permissions
 from users.models import CustomUser
 
 from .serializers import PostSerializer, UserSerializer
@@ -9,10 +9,10 @@ from .serializers import PostSerializer, UserSerializer
 class PostList(generics.ListCreateAPIView):
     queryset = Post.published.all()
     serializer_class = PostSerializer
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
-        return super().perform_create(serializer)
 
 
 class PostDetail(generics.RetrieveAPIView):

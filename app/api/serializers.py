@@ -7,12 +7,29 @@ from users.models import CustomUser
 
 class PostSerializer(TaggitSerializer, ModelSerializer):
 
-    author = serializers.ReadOnlyField(source="author.email")
+    # slug = serializers.SlugField(read_only=True)
+    author = serializers.ReadOnlyField(source="author.first_name")
     tags = TagListSerializerField()
 
     class Meta:
         model = Post
-        fields = ["id", "title", "body", "author", "created", "tags", "publish"]
+        fields = [
+            "id",
+            "title",
+            "slug",
+            "body",
+            "author",
+            "status",
+            "created",
+            "tags",
+            "publish",
+        ]
+        read_only_fields = [
+            "publish",
+        ]
+
+    def get_slug(self, obj):
+        return obj.slug
 
 
 class UserSerializer(ModelSerializer):
