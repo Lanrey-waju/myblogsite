@@ -1,6 +1,6 @@
 from blog.models import Post
 from rest_framework import serializers
-from rest_framework.serializers import ModelSerializer
+from rest_framework.serializers import HyperlinkedModelSerializer, ModelSerializer
 from taggit.serializers import TaggitSerializer, TagListSerializerField
 from users.models import CustomUser
 
@@ -24,7 +24,7 @@ class CustomTagListSerializerField(TagListSerializerField):
         return super().to_internal_value(tags)
 
 
-class PostSerializer(TaggitSerializer, ModelSerializer):
+class PostSerializer(TaggitSerializer, HyperlinkedModelSerializer):
 
     # slug = serializers.SlugField(read_only=True)
     author = serializers.ReadOnlyField(source="author.first_name")
@@ -33,6 +33,7 @@ class PostSerializer(TaggitSerializer, ModelSerializer):
     class Meta:
         model = Post
         fields = [
+            "url",
             "id",
             "title",
             "slug",
