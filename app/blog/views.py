@@ -1,17 +1,15 @@
 from datetime import datetime
 
-from django.contrib import messages
 from django.contrib.postgres.search import (
     SearchQuery,
     SearchRank,
     SearchVector,
     TrigramSimilarity,
 )
-from django.core.mail import BadHeaderError, send_mail
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.db.models import Count, F, Q
-from django.http import HttpResponse
-from django.shortcuts import get_object_or_404, redirect, render
+from django.shortcuts import get_object_or_404, render
+from django.views.generic.edit import FormView
 from taggit.models import Tag
 
 from .forms import CommentsForm, ContactMeForm, SearchForm
@@ -57,34 +55,38 @@ def about(request):
     return render(request, "blog/about.html")
 
 
-def contact_me(request):
-    contact_form = ContactMeForm()
-    if request.method == "POST":
-        contact_form = ContactMeForm(data=request.POST)
-        if contact_form.is_valid():
-            subject = "Blog Inquiry"
-            body = {
-                "name": contact_form.cleaned_data["name"],
-                "email": contact_form.cleaned_data["email"],
-                "message": contact_form.cleaned_data["message"],
-            }
-            message = "\n".join(body.values())
+class ContactFormView(FormView):
+    template_name = "blog/contact_me.html"
+    form_class = ContactMeForm
+    success_url = "/"
 
-            try:
-                send_mail(
-                    subject,
-                    message,
-                    body["email"],
-                    [
-                        "abdulmumin@aamodev.com",
-                    ],
-                )
-                messages.success(request, "Email sent successfully")
-            except BadHeaderError:
-                return HttpResponse("Invalid Header Found")
-            return redirect("blog:home")
+    def form_valid(self, form):
+        # if form is valid, send a mail
+        form.send_email()
+        return super().form_valid(form)
 
-    return render(request, "blog/contact_me.html", {"form": contact_form})
+
+# def contact_me(request):
+#     contact_form = ContactMeForm()
+#     if request.method == "POST":
+#         contact_form = ContactMeForm(data=request.POST)
+#         if contact_form.is_valid():
+#             subject = "Blog Inquiry"
+#             body = {
+#                 "name": contact_form.cleaned_data["name"],
+#                 "email": contact_form.cleaned_data["email"],
+#                 "message": contact_form.cleaned_data["message"],
+#             }
+#             message = "\n".join(body.values())
+#
+#             try:
+#                 contact_form.send_email()
+#                 messages.success(request, "Email sent successfully")
+#             except BadHeaderError:
+#                 return HttpResponse("Invalid Header Found")
+#             return redirect("blog:home")
+#
+#     return render(request, "blog/contact_me.html", {"form": contact_form})
 
 
 def post_detail(request, year, month, day, post):
