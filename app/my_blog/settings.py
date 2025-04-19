@@ -56,7 +56,7 @@ INSTALLED_APPS = [
     # 'allauth.socialaccount.providers.google',
     # 'allauth.socialaccount.providers.twitter',
 ]
-if DEBUG == True:
+if DEBUG:
     INSTALLED_APPS.extend(["debug_toolbar", "django_extensions"])
 
 MIDDLEWARE = [
@@ -199,8 +199,8 @@ if DEBUG is True:
 # Email Settings
 # EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
-EMAIL_HOST = os.getenv("EMAIL_HOST", "mailhog")
-EMAIL_PORT = os.getenv("EMAIL_PORT", 1025)
+EMAIL_HOST = os.getenv("EMAIL_HOST")
+EMAIL_PORT = os.getenv("EMAIL_PORT")
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")

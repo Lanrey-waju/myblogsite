@@ -1,47 +1,68 @@
-# pull official base image
-FROM python:3.11.3-alpine3.17
+# Use a more slim base image
+FROM python:3.12-slim-bookworm AS builder
 
-LABEL maintainer="Abdulmumin"
+# Set environment variables
+ENV PYTHONDONTWRITEBYTECODE=1 \
+  PYTHONUNBUFFERED=1 \
+  PIP_NO_CACHE_DIR=1 \
+  PIP_DISABLE_PIP_VERSION_CHECK=1
 
-# set environment variables
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
+# Install system dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+  build-essential \
+  libpq-dev \
+  curl \
+  && rm -rf /var/lib/apt/lists/*
 
-# copy required files
-COPY ./requirements.txt /requirements.txt
-COPY ./requirements.dev.txt /requirements.dev.txt
-COPY ./app /app
-COPY ./scripts /scripts
+# Create virtual environment
+RUN python -m venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
 
-# set work directory
+# Install Poetry
+RUN pip install poetry
+
+# Set working directory
 WORKDIR /app
 
-# expose port
+# Copy requirements files
+COPY requirements.txt requirements.dev.txt* ./
+
+# Install Python dependencies
+RUN pip install -r requirements.txt \
+  && if [ -f requirements.dev.txt ]; then \
+  pip install -r requirements.dev.txt; \
+  fi
+
+# Final stage
+FROM python:3.12-slim-bookworm
+
+# Set environment variables
+ENV PYTHONDONTWRITEBYTECODE=1 \
+  PYTHONUNBUFFERED=1 \
+  PATH="/opt/venv/bin:$PATH"
+
+# Install runtime dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+  postgresql-client \
+  && rm -rf /var/lib/apt/lists/*
+
+# Create user and directories
+RUN useradd -m -s /bin/bash lanrey \
+  && mkdir -p /vol/web/static \
+  && mkdir -p /vol/web/media \
+  && chown -R lanrey:lanrey /vol \
+  && chmod -R 755 /vol
+
+# Copy virtual environment and application files
+WORKDIR /app
+COPY --from=builder /opt/venv /opt/venv
+COPY --chown=lanrey:lanrey . .
+
+# Expose port
 EXPOSE 8000
 
-ARG DEV=false
-
-# Create virtual environment, install dependencies and add user
-RUN python -m venv /py && \
-    /py/bin/pip install --upgrade pip && \
-    apk add --update --no-cache postgresql-client && \
-    apk add --update --no-cache --virtual .tmp-deps \
-    build-base postgresql-dev musl-dev linux-headers && \
-    /py/bin/pip install -r /requirements.txt && \
-    if [ $DEV = "true" ]; \
-    then /py/bin/pip install -r /requirements.dev.txt ; \
-    fi && \
-    apk del .tmp-deps && \
-    adduser --disabled-password --no-create-home lanrey && \
-    mkdir -p /vol/web/static && \
-    mkdir -p /vol/web/media && \
-    chown -R lanrey:lanrey /vol && \
-    chmod -R 755 /vol && \
-    chmod -R +x /scripts
-
-ENV PATH="/scripts:/py/bin:$PATH"
-
+# Switch to non-root user
 USER lanrey
 
-CMD [ "run.sh" ]
-
+# Use entrypoint script
+CMD ["/scripts/run.sh"]
